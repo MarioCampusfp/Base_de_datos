@@ -60,3 +60,56 @@ INSERT INTO participacion (idequipo, idtorneo, numeros_de_equipos) VALUES
 (3, 2, 8),  
 (1, 3, 12), 
 (2, 3, 12); 
+
+ALTER TABLE equipos
+ADD COLUMN puntos INT DEFAULT 3;
+
+SELECT 
+    jugador.idjugador, 
+    jugador.nombre AS nombre_jugador, 
+    jugador.apellido, 
+    jugador.apodo, 
+    jugador.edad, 
+    jugador.pais, 
+    equipos.nombre AS nombre_equipo
+FROM 
+    jugador
+JOIN 
+    equipos ON jugador.idequipo = equipos.idequipo;
+
+SELECT 
+    equipos.idequipo, 
+    equipos.nombre AS nombre_equipo, 
+    COUNT(jugador.idjugador) AS numero_de_jugadores
+FROM 
+    equipos
+JOIN 
+    jugador ON equipos.idequipo = jugador.idequipo
+GROUP BY 
+    equipos.idequipo, equipos.nombre
+HAVING 
+    COUNT(jugador.idjugador) > 3;
+
+SELECT 
+    torneo.idtorneo,
+    torneo.nombre AS nombre_torneo,
+    torneo.fecha_de_inicio,
+    torneo.premio_en_dinero
+FROM 
+    torneo
+JOIN 
+    participacion ON torneo.idtorneo = participacion.idtorneo
+JOIN 
+    equipos ON participacion.idequipo = equipos.idequipo
+WHERE 
+    equipos.nombre = 'Los Invencibles';
+
+SELECT 
+    equipos.idequipo, 
+    equipos.nombre AS nombre_equipo, 
+    equipos.puntos
+FROM 
+    equipos
+ORDER BY 
+    equipos.puntos DESC
+LIMIT 3;
